@@ -120,6 +120,7 @@ class LIBHUNSPELL_DLL_EXPORTED Hunspell {
 
   /* load extra dictionaries (only dic files) */
   int add_dic(const char* dpath, const char* key = NULL);
+  int remove_dic();
 
   /* spell(word) - spellcheck word
    * output: false = bad word, true = good word

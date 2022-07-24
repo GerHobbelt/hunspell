@@ -90,6 +90,7 @@ public:
   HunspellImpl(const char* affpath, const char* dpath, const char* key = NULL);
   ~HunspellImpl();
   int add_dic(const char* dpath, const char* key = NULL);
+  int remove_dic();
   std::vector<std::string> suffix_suggest(const std::string& root_word);
   std::vector<std::string> generate(const std::string& word, const std::vector<std::string>& pl);
   std::vector<std::string> generate(const std::string& word, const std::string& pattern);
@@ -220,6 +221,14 @@ int HunspellImpl::add_dic(const char* dpath, const char* key) {
   if (!affixpath)
     return 1;
   m_HMgrs.push_back(new HashMgr(dpath, affixpath, key));
+  return 0;
+}
+
+int HunspellImpl::remove_dic() {
+  if (m_HMgrs.empty()) {
+    return 1;
+  }
+  m_HMgrs.pop_back();
   return 0;
 }
 
@@ -2036,6 +2045,10 @@ int Hunspell::add_dic(const char* dpath, const char* key) {
   return m_Impl->add_dic(dpath, key);
 }
 
+int Hunspell::remove_dic() {
+  return m_Impl->remove_dic();
+}
+
 bool Hunspell::spell(const std::string& word, int* info, std::string* root) {
   return m_Impl->spell(word, info, root);
 }
@@ -2176,6 +2189,10 @@ void Hunspell_destroy(Hunhandle* pHunspell) {
 
 int Hunspell_add_dic(Hunhandle* pHunspell, const char* dpath) {
   return reinterpret_cast<HunspellImpl*>(pHunspell)->add_dic(dpath);
+}
+
+int Hunspell_remove_dic(Hunhandle* pHunspell) {
+  return reinterpret_cast<HunspellImpl*>(pHunspell)->remove_dic();
 }
 
 int Hunspell_spell(Hunhandle* pHunspell, const char* word) {
