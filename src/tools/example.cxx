@@ -38,7 +38,6 @@
 #include <cstring>
 #include <cstdlib>
 #include <fstream>
-#include <iostream>
 
 #include "../hunspell/hunspell.hxx"
 
@@ -47,26 +46,6 @@ using namespace std;
 int main(int argc, char** argv) {
 
   /* first parse the command line options */
-
-
-    Hunspell h("/home/roj/.local/lib/python3.10/site-packages/hunspell/dictionaries/en_GB.aff", "/home/roj/.local/lib/python3.10/site-packages/hunspell/dictionaries/en_GB.dic");
-    // h->
-    // h->add_dic("main.dic");
-    h.add_dic("my.dic");
-    h.remove_dic();
-    std::string a = "hi";
-    bool s = h.spell(a);
-    std::cout << "hi: " << s << std::endl;
-    a = "roj";
-    s = h.spell(a);
-    std::cout << "roj: " << s << std::endl;
-    h.add_dic("my.dic");
-    a = "roj";
-    s = h.spell(a);
-    std::cout << "roj: " << s << std::endl;
-
-  exit(0);
-
   if (argc < 4) {
     fprintf(stderr, "example (now it works with more dictionary files):\n");
     fprintf(stderr,
