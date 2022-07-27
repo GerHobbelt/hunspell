@@ -527,6 +527,19 @@ int HashMgr::add(const std::string& word) {
   return 0;
 }
 
+int HashMgr::add_with_flags(const std::string& word, const std::string& flags) {
+  if (remove_forbidden_flag(word)) {
+    int captype;
+    unsigned short *df;
+    int al = decode_flags(&df, flags.c_str());
+    int wcl = get_clen_and_captype(word, &captype);
+    add_word(word, wcl, df, al, NULL, false, captype);
+    return add_hidden_capitalized_word(word, wcl, df, al, NULL,
+                                       captype);
+  }
+  return 0;
+}
+
 int HashMgr::add_with_affix(const std::string& word, const std::string& example) {
   // detect captype and modify word length for UTF-8 encoding
   struct hentry* dp = lookup(example.c_str());
@@ -723,7 +736,7 @@ int HashMgr::decode_flags(unsigned short** result, const std::string& flags, Fil
   switch (flag_mode) {
     case FLAG_LONG: {  // two-character flags (1x2yZz -> 1x 2y Zz)
       len = flags.size();
-      if (len % 2 == 1)
+      if (len % 2 == 1 && af != NULL)
         HUNSPELL_WARNING(stderr, "error: line %d: bad flagvector\n",
                          af->getlinenum());
       len /= 2;
@@ -752,12 +765,12 @@ int HashMgr::decode_flags(unsigned short** result, const std::string& flags, Fil
       for (const char* p = src; *p; p++) {
         if (*p == ',') {
           int i = atoi(src);
-          if (i >= DEFAULTFLAGS)
+          if (i >= DEFAULTFLAGS && af!=NULL)
             HUNSPELL_WARNING(
                 stderr, "error: line %d: flag id %d is too large (max: %d)\n",
                 af->getlinenum(), i, DEFAULTFLAGS - 1);
           *dest = (unsigned short)i;
-          if (*dest == 0)
+          if (*dest == 0 && af != NULL)
             HUNSPELL_WARNING(stderr, "error: line %d: 0 is wrong flag id\n",
                              af->getlinenum());
           src = p + 1;
@@ -765,12 +778,12 @@ int HashMgr::decode_flags(unsigned short** result, const std::string& flags, Fil
         }
       }
       int i = atoi(src);
-      if (i >= DEFAULTFLAGS)
+      if (i >= DEFAULTFLAGS && af!=NULL)
         HUNSPELL_WARNING(stderr,
                          "error: line %d: flag id %d is too large (max: %d)\n",
                          af->getlinenum(), i, DEFAULTFLAGS - 1);
       *dest = (unsigned short)i;
-      if (*dest == 0)
+      if (*dest == 0 && af!=NULL)
         HUNSPELL_WARNING(stderr, "error: line %d: 0 is wrong flag id\n",
                          af->getlinenum());
       break;
