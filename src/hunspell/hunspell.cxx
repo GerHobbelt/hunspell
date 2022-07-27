@@ -105,7 +105,7 @@ public:
   const std::vector<w_char>& get_wordchars_utf16() const;
   const std::string& get_dict_encoding() const;
   int add(const std::string& word);
-  int add_with_flags(const std::string& word, const std::string& flags);
+  int add_with_flags(const std::string& word, const std::string& flags, const std::string& desc = NULL);
   int add_with_affix(const std::string& word, const std::string& example);
   int remove(const std::string& word);
   const std::string& get_version_cpp() const;
@@ -1406,9 +1406,9 @@ int HunspellImpl::add(const std::string& word) {
   return 0;
 }
 
-int HunspellImpl::add_with_flags(const std::string& word, const std::string& flags) {
+int HunspellImpl::add_with_flags(const std::string& word, const std::string& flags, const std::string& desc) {
   if (!m_HMgrs.empty())
-    return m_HMgrs[0]->add_with_flags(word, flags);
+    return m_HMgrs[0]->add_with_flags(word, flags, desc);
   return 0;
 }
 
@@ -2092,8 +2092,8 @@ int Hunspell::add(const std::string& word) {
   return m_Impl->add(word);
 }
 
-int Hunspell::add_with_flags(const std::string& word, const std::string& flags) {
-  return m_Impl->add_with_flags(word, flags);
+int Hunspell::add_with_flags(const std::string& word, const std::string& flags, const std::string& desc) {
+  return m_Impl->add_with_flags(word, flags, desc);
 }
 
 int Hunspell::add_with_affix(const std::string& word, const std::string& example) {
@@ -2255,8 +2255,8 @@ int Hunspell_add(Hunhandle* pHunspell, const char* word) {
   return reinterpret_cast<HunspellImpl*>(pHunspell)->add(word);
 }
 
-int Hunspell_add_with_flags(Hunhandle* pHunspell, const char* word, const char* flags) {
-  return reinterpret_cast<HunspellImpl*>(pHunspell)->add_with_flags(word, flags);
+int Hunspell_add_with_flags(Hunhandle* pHunspell, const char* word, const char* flags, const char* desc) {
+  return reinterpret_cast<HunspellImpl*>(pHunspell)->add_with_flags(word, flags, desc);
 }
 
 /* add word to the run-time dictionary with affix flags of

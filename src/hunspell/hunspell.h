@@ -139,7 +139,7 @@ LIBHUNSPELL_DLL_EXPORTED int Hunspell_add(Hunhandle* pHunspell,
 
 
 LIBHUNSPELL_DLL_EXPORTED int Hunspell_add_with_flags(Hunhandle* pHunspell,
-                                          const char* word, const char* flags);
+                                          const char* word, const char* flags, const char* desc);
 
 /* add word to the run-time dictionary with affix flags of
  * the example (a dictionary word): Hunspell will recognize

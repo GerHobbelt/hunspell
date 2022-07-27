@@ -527,14 +527,14 @@ int HashMgr::add(const std::string& word) {
   return 0;
 }
 
-int HashMgr::add_with_flags(const std::string& word, const std::string& flags) {
+int HashMgr::add_with_flags(const std::string& word, const std::string& flags, const std::string& desc) {
   if (remove_forbidden_flag(word)) {
     int captype;
     unsigned short *df;
     int al = decode_flags(&df, flags.c_str());
     int wcl = get_clen_and_captype(word, &captype);
-    add_word(word, wcl, df, al, NULL, false, captype);
-    return add_hidden_capitalized_word(word, wcl, df, al, NULL,
+    add_word(word, wcl, df, al, &desc, false, captype);
+    return add_hidden_capitalized_word(word, wcl, df, al, &desc,
                                        captype);
   }
   return 0;
@@ -562,7 +562,7 @@ int HashMgr::add_with_affix(const std::string& word, const std::string& example)
     return add_hidden_capitalized_word(word, wcl, dp->astr,
                                        dp->alen, NULL, captype);
   }
-  return 1;
+  return 33;
 }
 
 // walk the hash table entry by entry - null at end
